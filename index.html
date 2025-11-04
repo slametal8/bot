@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Auto Indexer Bot - Multi-Engine Submission</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            text-align: center;
+        }
+
+        .feature-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .panel h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .urls-preview {
+            background: var(--light);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-success { color: var(--secondary); }
+        .stat-failed { color: var(--danger); }
+        .stat-total { color: var(--primary); }
+
+        .log-container {
+            background: var(--dark);
+            color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .log-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .log-success { color: #10b981; }
+        .log-error { color: #ef4444; }
+        .log-warning { color: #f59e0b; }
+        .log-info { color: #60a5fa; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .engine-status {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .engine-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .engine-active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .engine-inactive {
+            background: var(--gray);
+            color: white;
+        }
+
+        .tab-container {
+            margin: 2rem 0;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Auto Indexer Bot</h1>
+            <p>Multi-Engine URL Submission - Google, Bing, Yandex, Yahoo & AOL</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">⚡</div>
+                <h3>Multi-Threading</h3>
+                <p>Super fast processing with parallel execution</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🌐</div>
+                <h3>5 Search Engines</h3>
+                <p>Google, Bing, Yandex, Yahoo & AOL</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🕒</div>
+                <h3>24/7 Operation</h3>
+                <p>Non-stop automated submission</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔧</div>
+                <h3>Low Resource</h3>
+                <p>Works on VPS & low-end devices</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2>⚙️ Configuration</h2>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab('urls')">URLs</div>
+                        <div class="tab" onclick="switchTab('sitemap')">Sitemap</div>
+                        <div class="tab" onclick="switchTab('api')">API</div>
+                    </div>
+
+                    <div id="urls-tab" class="tab-content active">
+                        <div class="form-group">
+                            <label for="urlsInput">Paste URLs (one per line):</label>
+                            <textarea id="urlsInput" class="form-control" rows="6" placeholder="https://example.com/page1&#10;https://example.com/page2&#10;https://example.com/page3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="urlsFile">Or upload URLs file:</label>
+                            <input type="file" id="urlsFile" class="form-control" accept=".txt,.csv">
+                        </div>
+                    </div>
+
+                    <div id="sitemap-tab" class="tab-content">
+                        <div class="form-group">
+                            <label for="sitemapUrl">Sitemap URL:</label>
+                            <input type="url" id="sitemapUrl" class="form-control" placeholder="https://example.com/sitemap.xml">
+                        </div>
+                        <button onclick="extractFromSitemap()" class="btn btn-secondary">Extract URLs</button>
+                    </div>
+
+                    <div id="api-tab" class="tab-content">
+                        <div class="form-group">
+                            <label for="apiEndpoint">API Endpoint:</label>
+                            <input type="url" id="apiEndpoint" class="form-control" placeholder="https://api.example.com/urls">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiKey">API Key (optional):</label>
+                            <input type="text" id="apiKey" class="form-control" placeholder="Your API key">
+                        </div>
+                        <button onclick="fetchFromAPI()" class="btn btn-secondary">Fetch URLs</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Search Engines:</label>
+                    <div class="engine-status">
+                        <div class="engine-badge engine-active" id="googleStatus">
+                            <span>🔍 Google</span>
+                        </div>
+                        <div class="engine-badge engine-active" id="bingStatus">
+                            <span>🔍 Bing</span>
+                        </div>
+                        <div class="engine-badge engine-active" id="yandexStatus">
+                            <span>🔍 Yandex</span>
+                        </div>
+                        <div class="engine-badge engine-active" id="yahooStatus">
+                            <span>🔍 Yahoo/AOL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxWorkers">Max Workers (Threads):</label>
+                    <input type="number" id="maxWorkers" class="form-control" value="5" min="1" max="20">
+                </div>
+
+                <div class="form-group">
+                    <label for="batchSize">Batch Size:</label>
+                    <input type="number" id="batchSize" class="form-control" value="10" min="1" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="continuousMode" checked>
+                        Continuous Mode (24/7)
+                    </label>
+                </div>
+
+                <button onclick="startIndexing()" class="btn btn-primary" style="width: 100%;">
+                    🚀 Start Indexing
+                </button>
+                <button onclick="stopIndexing()" class="btn btn-danger hidden" style="width: 100%; margin-top: 0.5rem;" id="stopBtn">
+                    ⏹️ Stop Indexing
+                </button>
+            </div>
+
+            <div class="panel">
+                <h2>📊 Statistics & Logs</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number stat-success" id="successCount">0</div>
+                        <div>Successful</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-failed" id="failedCount">0</div>
+                        <div>Failed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-total" id="totalCount">0</div>
+                        <div>Total</div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Live Logs:</label>
+                    <div class="log-container" id="logContainer">
+                        <div class="log-entry log-info">🚀 Auto Indexer Bot Ready</div>
+                        <div class="log-entry log-info">📝 Paste URLs or upload file to start</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URLs Preview:</label>
+                    <div class="urls-preview" id="urlsPreview">
+                        No URLs loaded yet...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AutoIndexer {
+            constructor() {
+                this.isRunning = false;
+                this.urls = [];
+                this.stats = { success: 0, failed: 0, total: 0 };
+                this.engines = {
+                    google: true,
+                    bing: true,
+                    yandex: true,
+                    yahoo: true
+                };
+            }
+
+            log(message, type = 'info') {
+                const logContainer = document.getElementById('logContainer');
+                const entry = document.createElement('div');
+                entry.className = `log-entry log-${type}`;
+                entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                logContainer.appendChild(entry);
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+
+            updateStats() {
+                document.getElementById('successCount').textContent = this.stats.success;
+                document.getElementById('failedCount').textContent = this.stats.failed;
+                document.getElementById('totalCount').textContent = this.stats.total;
+
+                const progress = this.stats.total > 0 ? (this.stats.success / this.stats.total) * 100 : 0;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+            }
+
+            async simulateSubmission(url) {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
+
+                const results = {};
+
+                if (this.engines.google) {
+                    results.google = Math.random() > 0.2;
+                    this.log(`Google: ${results.google ? '✅' : '❌'} ${url}`, results.google ? 'success' : 'error');
+                }
+
+                if (this.engines.bing) {
+                    results.bing = Math.random() > 0.15;
+                    this.log(`Bing: ${results.bing ? '✅' : '❌'} ${url}`, results.bing ? 'success' : 'error');
+                }
+
+                if (this.engines.yandex) {
+                    results.yandex = Math.random() > 0.25;
+                    this.log(`Yandex: ${results.yandex ? '✅' : '❌'} ${url}`, results.yandex ? 'success' : 'error');
+                }
+
+                if (this.engines.yahoo) {
+                    results.yahoo = Math.random() > 0.3;
+                    this.log(`Yahoo/AOL: ${results.yahoo ? '✅' : '❌'} ${url}`, results.yahoo ? 'success' : 'error');
+                }
+
+                return results;
+            }
+
+            async processBatch(urls) {
+                const promises = urls.map(url => this.simulateSubmission(url));
+                const results = await Promise.all(promises);
+
+                results.forEach(result => {
+                    this.stats.total++;
+                    if (Object.values(result).some(success => success)) {
+                        this.stats.success++;
+                    } else {
+                        this.stats.failed++;
+                    }
+                });
+
+                this.updateStats();
+            }
+
+            async startIndexing(urls, maxWorkers = 5, batchSize = 10, continuous = false) {
+                this.isRunning = true;
+                this.urls = urls;
+                this.stats = { success: 0, failed: 0, total: 0 };
+                
+                this.log('🚀 Starting indexing process...', 'info');
+                this.updateStats();
+
+                let processed = 0;
+
+                do {
+                    const batch = this.urls.slice(processed, processed + batchSize);
+                    if (batch.length === 0) break;
+
+                    await this.processBatch(batch);
+                    processed += batch.length;
+
+                    if (!continuous) break;
+
+                    // Wait between batches in continuous mode
+                    if (processed < this.urls.length) {
+                        this.log(`💤 Batch completed. Waiting before next batch...`, 'info');
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    }
+
+                } while (this.isRunning && processed < this.urls.length && continuous);
+
+                if (this.isRunning) {
+                    this.log('✅ Indexing completed!', 'success');
+                    this.stopIndexing();
+                }
+            }
+
+            stopIndexing() {
+                this.isRunning = false;
+                this.log('⏹️ Indexing stopped', 'warning');
+                updateUI();
+            }
+        }
+
+        const indexer = new AutoIndexer();
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function updateUI() {
+            const stopBtn = document.getElementById('stopBtn');
+            const startBtn = document.querySelector('.btn-primary');
+
+            if (indexer.isRunning) {
+                stopBtn.classList.remove('hidden');
+                startBtn.disabled = true;
+                startBtn.textContent = '🔄 Running...';
+            } else {
+                stopBtn.classList.add('hidden');
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 Start Indexing';
+            }
+        }
+
+        function getURLs() {
+            const urlsInput = document.getElementById('urlsInput').value;
+            const urlsFile = document.getElementById('urlsFile').files[0];
+            
+            let urls = [];
+
+            if (urlsInput) {
+                urls = urlsInput.split('\n')
+                    .map(url => url.trim())
+                    .filter(url => url && isValidURL(url));
+            }
+
+            if (urlsFile) {
+                // In a real implementation, you would read the file
+                indexer.log('📁 File upload would be processed in real implementation', 'info');
+            }
+
+            // Update preview
+            const preview = document.getElementById('urlsPreview');
+            if (urls.length > 0) {
+                preview.innerHTML = urls.slice(0, 10).map(url => 
+                    `<div>${url}</div>`
+                ).join('');
+                if (urls.length > 10) {
+                    preview.innerHTML += `<div>... and ${urls.length - 10} more</div>`;
+                }
+            } else {
+                preview.textContent = 'No valid URLs found';
+            }
+
+            return urls;
+        }
+
+        function isValidURL(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        async function startIndexing() {
+            const urls = getURLs();
+            if (urls.length === 0) {
+                alert('Please provide valid URLs to index');
+                return;
+            }
+
+            const maxWorkers = parseInt(document.getElementById('maxWorkers').value) || 5;
+            const batchSize = parseInt(document.getElementById('batchSize').value) || 10;
+            const continuousMode = document.getElementById('continuousMode').checked;
+
+            // Get engine status
+            indexer.engines.google = document.getElementById('googleStatus').classList.contains('engine-active');
+            indexer.engines.bing = document.getElementById('bingStatus').classList.contains('engine-active');
+            indexer.engines.yandex = document.getElementById('yandexStatus').classList.contains('engine-active');
+            indexer.engines.yahoo = document.getElementById('yahooStatus').classList.contains('engine-active');
+
+            updateUI();
+            indexer.startIndexing(urls, maxWorkers, batchSize, continuousMode);
+        }
+
+        function stopIndexing() {
+            indexer.stopIndexing();
+        }
+
+        function extractFromSitemap() {
+            const sitemapUrl = document.getElementById('sitemapUrl').value;
+            if (!sitemapUrl) {
+                alert('Please enter a sitemap URL');
+                return;
+            }
+
+            indexer.log(`🔍 Extracting URLs from sitemap: ${sitemapUrl}`, 'info');
+            // In real implementation, you would fetch and parse the sitemap
+            // For demo, we'll generate some sample URLs
+            const sampleUrls = [
+                'https://example.com/page1',
+                'https://example.com/page2', 
+                'https://example.com/page3',
+                'https://example.com/article/seo-tips',
+                'https://example.com/blog/digital-marketing'
+            ];
+            
+            document.getElementById('urlsInput').value = sampleUrls.join('\n');
+            getURLs();
+            switchTab('urls');
+        }
+
+        function fetchFromAPI() {
+            const apiEndpoint = document.getElementById('apiEndpoint').value;
+            if (!apiEndpoint) {
+                alert('Please enter an API endpoint');
+                return;
+            }
+
+            indexer.log(`🔗 Fetching URLs from API: ${apiEndpoint}`, 'info');
+            // In real implementation, you would make an API call
+            // For demo, we'll generate some sample URLs
+            const sampleUrls = [
+                'https://api-site.com/data1',
+                'https://api-site.com/data2',
+                'https://api-site.com/data3',
+                'https://api-site.com/products/1',
+                'https://api-site.com/products/2'
+            ];
+            
+            document.getElementById('urlsInput').value = sampleUrls.join('\n');
+            getURLs();
+            switchTab('urls');
+        }
+
+        // Toggle engine status
+        document.querySelectorAll('.engine-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                this.classList.toggle('engine-active');
+                this.classList.toggle('engine-inactive');
+            });
+        });
+
+        // File upload handler
+        document.getElementById('urlsFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                indexer.log(`📁 File selected: ${file.name}`, 'info');
+                getURLs();
+            }
+        });
+
+        // Real-time URL validation
+        document.getElementById('urlsInput').addEventListener('input', getURLs);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            indexer.log('🤖 Auto Indexer Bot Initialized', 'info');
+            indexer.log('✅ Ready to index URLs to multiple search engines', 'info');
+        });
+    </script>
+</body>
+</html>
